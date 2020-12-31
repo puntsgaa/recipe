@@ -9,7 +9,6 @@ import * as listView from "./view/listView";
 import Like from "./model/like";
 import * as likesView from "./view/likeView";
 const state = {};
-likesView.toggleLikeMenu(0);
 const controlSearch = async () => {
     console.log("controlSearch");
     const query = searchView.getInput();
@@ -35,9 +34,6 @@ elements.searchForm.addEventListener("submit", e => {
 
 const controlRecipe = async () => {
     const id = window.location.hash.replace("#", "");
-    if (!state.likes) {
-        state.likes = new Like();
-    }
     if (id) {
         state.recipe = new Recipe(id);
         clearRecipe();
@@ -55,6 +51,16 @@ const arr = ["load", "hashchange"];
 arr.forEach(event => {
     window.addEventListener(event, controlRecipe);
 });
+
+window.addEventListener("load", e => {
+    if (!state.likes) {
+        state.likes = new Like();
+        likesView.toggleLikeMenu(state.likes.getNumberOfLikes());
+        state.likes.likes.forEach(el => {
+            likesView.renderLike(el);
+        })
+    }
+})
 
 const controlList = () => {
     state.list = new List();

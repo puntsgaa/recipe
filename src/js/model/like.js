@@ -1,6 +1,9 @@
 export default class Like {
     constructor() {
-        this.likes = []
+        this.readDataLocalStorage();
+        if (!this.likes) {
+            this.likes = []
+        }
     }
 
     addLike = (id, title, publisher, img) => {
@@ -11,6 +14,7 @@ export default class Like {
             img: img
         }
         this.likes.push(like);
+        this.saveDataLocalStorage();
         return like;
     }
 
@@ -19,6 +23,7 @@ export default class Like {
             el.id === id;
         })
         this.likes.splice(index, 1);
+        this.saveDataLocalStorage();
     }
 
     isLike = (id) => {
@@ -32,5 +37,13 @@ export default class Like {
 
     getNumberOfLikes = () => {
         return this.likes.length;
+    }
+
+    saveDataLocalStorage = () => {
+        localStorage.setItem("likes", JSON.stringify(this.likes));
+    }
+
+    readDataLocalStorage = () => {
+        this.likes = JSON.parse(localStorage.getItem("likes"));
     }
 }
